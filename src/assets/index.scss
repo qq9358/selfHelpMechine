@@ -1,0 +1,117 @@
+body {
+  margin: 0px;
+}
+
+.background-div {
+  background: url("./img/queryTicketBackground.jpg");
+  // background-size: 100%;
+  background-repeat: no-repeat;
+  height: 1859px;
+}
+.button-back-div {
+  padding: 100px 60px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  .back-button {
+    font-size: 35px;
+    padding: 25px 70px 25px 70px;
+    color: #ffffff;
+    background: #004b75;
+    border: 0px;
+    border-radius: 15px;
+    margin-left: 10px;
+  }
+  .alipay-button {
+    font-size: 35px;
+    padding: 25px 20px 25px 20px;
+    color: #ffffff;
+    background: #2594c9;
+    border: 0px;
+    border-radius: 15px;
+  }
+  .wechat-button {
+    font-size: 35px;
+    padding: 25px 35px 25px 35px;
+    color: #ffffff;
+    background: #1b893e;
+    border: 0px;
+    border-radius: 15px;
+  }
+}
+.div-tabs {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  background: #ffffff;
+  overflow: hidden;
+  .tabs-head {
+    display: flex;
+    justify-content: space-around;
+    .tabs-head-div {
+      padding: 20px 20px 20px 20px;
+      font-size: 30px;
+      width: 33.3%;
+      background: #eeeeee;
+    }
+    .tabs-head-selected {
+      background: #004b75;
+      color: #ffffff;
+    }
+  }
+  .tab-body {
+    height: 640px;
+    .div-tab-img {
+      padding: 100px 0px 80px 0px;
+    }
+    .div-tab-explain {
+      font-size: 30px;
+      padding: 0px 0px 50px 0px;
+    }
+    .div-form {
+      padding: 30px 50px 0px 50px;
+      .div-input {
+        display: flex;
+        align-items: center;
+        padding: 10px 0px 10px 0px;
+        .input-label {
+          font-size: 30px;
+          margin-right: 30px;
+          width: 28%;
+          text-align: right;
+        }
+        /deep/ .el-input__inner {
+          height: 60px;
+          font-size: 30px;
+          width: 397px;
+        }
+      }
+    }
+  }
+}
+.save-button {
+  font-size: 35px;
+  padding: 25px 90px 25px 90px;
+  color: #ffffff;
+  background: #409eff;
+  border: 0px;
+  border-radius: 15px;
+}
+.div-button-slot {
+  font-size: 36px;
+  display: flex;
+  .iconfont {
+    font-size: 36px;
+  }
+  .div-button-icon {
+    padding: 1px 8px 0px 0px;
+  }
+  .div-button-text {
+  }
+}
+.self-message {
+  font-size: 30px;
+  padding: 20px 30px 20px 30px;
+  .el-message__content {
+    font-size: 30px;
+  }
+}

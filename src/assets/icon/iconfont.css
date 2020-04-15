@@ -1,0 +1,25 @@
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1584319862025'); /* IE9 */
+  src: url('iconfont.eot?t=1584319862025#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAARoAAsAAAAACLQAAAQaAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDBgqFGIQpATYCJAMMCwgABCAFhG0HPBt1BxHVm5HJvk7g3LzQ9NUkMV2CwERpDW0NS8J9q9+Mp9WG0e8RDuHgmHj4b+zbfTOz6kktiSVTtJGIJBKNqNagtCU0IskiHs1P/+vu3w8Xu8jnJ2otOCXUPIowT6Te1pqVQHUqTEp0JCvZAaqng+wBZ/M0ME5HXGICxSS4CTo5uR0kg6BE47ZEQ2x+9p4cauSZXmsLpAgzCbBISmBO8EQC5P+fy+nV1sDmtyyXuQYe9QKMAwpsjGkL5IBLJOFYUxheu9hhHidQr8+M2Dqo6wNEQccF4rzvZAOQjFFpoIVaTXXF0iIeqqpNt9ISHgSfj+9mA0FSldGpp84p2AP8U7kJ8Fby5iFE09khrCJjBoU4W+k8g6LkjKxeU3JzYbUipKki/08g1NXVG/3jJaIaVTaCNKFIFyVyOASfQgCV619FNerwDkQNSJ2+GqmOzh3gxCBPd9xS86ML0opiCg1ceX0qZJCaX1zASDlHPks+KWVBPplUIcmW6ihfKX0V95RSE2ua5AhvCYV1v1ghiUR+ITl9EVkjWSddJX+X9Jh4ETptZV6whLIANTg/J9NMUxyNt9q6tP149+tO2sQJr/wtlnrrZpJUFOr2WONkL7DsaGx2eodVsoC1jbqLvogcA2yIeifn0qMmNBpk9agLj4+inadgLD6nlUmvmcmo2SZPW2Rv4pZuZCvcEdtZKwR/9TyTnVj6EJGI+qKN9WNVQ6RiqWOcaHxThS1iCu0/DQd3j8XPR47o+/sJji4Y9tkr1N3uR2rEoC3p6z8sFEASy5WAOX3i4mGcea9ff04g2Od4vpWIID5vglSWohRBoFhNQH7GBHge35UmRtNCv+UY8Thg8382hdSn7p18BdeAqX7w/W4G1PLH9OH8l71WkU0zbcmQENLFKPbT9UtCBzswAirDdMOKeUDg4enZcoQ65AJJWfUBbXoe7uZXOCNrsjTFp1XFtWjOGW3VLRIwlBQNSnQFKuAqVICKbGnXgm8ggtfj/sjx/groAt6ulwASqCi6m9W+K1fw70Udm4ouoaZcVKEjNEPZRa/PngBfVPnj1dDu43B1V+dyQq2uBJIavZDVGsEV0gxUaTAP1WqtQr1pu6sbdLiARKnDlGsEQqsjSJo9hazVc1whfYAq3X5CtdYAQz34Fd0t28bht7aEJqMD1j/4dpoI28KtsPKG7ndkUloS0F9I0o+Armj5zBETpClmyB/XYBYgKI3hQE7DKEohozRAmxWPOVurqqh6kWKncaFliyATQw5g+Qd8tlRCeO1Zq/D+G+T6FjFRA6rG/YKI5HcPdAqtA+6oTDqhbqW39MNlYEywowSSioED7CiykimQVQ8KIBtTeAPimTWVaSW6KpXl1fH77aBQaKGN5UiRo2he+pwVo+SaGfmZ+V8oAAAA') format('woff2'),
+  url('iconfont.woff?t=1584319862025') format('woff'),
+  url('iconfont.ttf?t=1584319862025') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1584319862025#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-icon-test:before {
+  content: "\e65e";
+}
+
+.icon-alipay:before {
+  content: "\e666";
+}
+
