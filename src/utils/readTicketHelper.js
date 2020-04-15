@@ -15,7 +15,7 @@ export default {
     },
     readQrCode(ticket) {
         if (process.env.NODE_ENV === "production") {
-            bridge.webAPI_readTicket(0x02, function (res) {
+            window.bridge.webAPI_readTicket(0x02, function (res) {
                 ticket.qrCode = res.code;
             });
         } else {
@@ -25,7 +25,7 @@ export default {
     readIdCard(idCard) {
         let self = this;
         if (process.env.NODE_ENV === "production") {
-            bridge.webAPI_readTicket(0x04, function (res) {
+            window.bridge.webAPI_readTicket(0x04, function (res) {
                 if (res.IDCard) {
                     let idCardReturn = self.getIdCard(res.IDCard);
                     idCard.idNum = idCardReturn.idNum;
@@ -37,7 +37,7 @@ export default {
     },
     playVideo(fileName) {
         if (process.env.NODE_ENV === "production") {
-            // bridge.webAPI_Audio(fileName);
+            window.bridge.webAPI_Audio(fileName);
         }
     }
 }

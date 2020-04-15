@@ -53,7 +53,6 @@
 import iLogo from "./../../assets/img/logo.png";
 import TicketFooter from "./../../components/TicketFooter.vue";
 import Keyboard from "./../../components/Keyboard.vue";
-import combineURLs from "axios/lib/helpers/combineURLs.js";
 import readTicketHelper from "@/utils/readTicketHelper.js";
 
 export default {

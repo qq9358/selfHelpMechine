@@ -1,5 +1,4 @@
-import ajax from "@/utils/ajax.js";
-import combineURLs from "axios/lib/helpers/combineURLs.js";
+import ajax from "@/utils/reportAjax.js";
 import qs from "qs";
 
 export default {

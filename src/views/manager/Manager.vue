@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import iExplainImg from "./../../assets/img/ReadQrAndIDCard.png";
 import TicketFooter from "./../../components/TicketFooter.vue";
 import Logo from "@/components/Logo.vue";
 import validator from "@/utils/validator.js";

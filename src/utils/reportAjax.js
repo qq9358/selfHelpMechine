@@ -3,8 +3,8 @@ import tokenService from "@/services/tokenService.js";
 import ipHelper from "./ipHelper.js";
 
 const baseURL = ipHelper.isIntranetIp(window.location.href)
-  ? window.webApiIntranetUrl
-  : window.webApiOuterNetUrl;
+  ? window.reportIntranetUrl
+  : window.reportOuterNetUrl;
 
 const ajax = axios.create({
   // baseURL: 'http://192.168.1.68:8039/',

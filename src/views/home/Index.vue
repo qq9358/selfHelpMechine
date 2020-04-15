@@ -7,21 +7,6 @@
         <div class="title-three">{{titleThree}}</div>
       </div>
     </div>
-    <el-upload
-      class="upload-demo"
-      action="http://egoal-test.eicp.net:25449/cd/common/UploadImageAsync/"
-      :on-preview="handlePreview"
-      :on-remove="handleRemove"
-      :before-remove="beforeRemove"
-      multiple
-      :limit="3"
-      :on-exceed="handleExceed"
-      :file-list="fileList"
-      :http-request="myRequest"
-    >
-      <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-    </el-upload>
     <div class="body-div">
       <div class="button-row">
         <div class="button-div-one" @click="onQueryTicket">查票</div>
@@ -37,10 +22,8 @@
 </template>
 
 <script>
-import iTicketImg from "./../../assets/img/ff.jpg";
 import qWebChannel from "@/utils/qWebChannel.js";
-import memberService from "@/services/memberService.js";
-import settingService from "@/services/settingService.js";
+import staffService from "@/services/staffService.js";
 import ajax from "@/utils/ajax.js";
 
 export default {
@@ -63,12 +46,12 @@ export default {
         window.bridge = channel.objects.cppObject;
       });
     }
-    await memberService.loginFromWeChatAsync({
-      code: this.$route.query.code,
-      state: this.$route.query.state
-    });
-
-    await settingService.getSettingsFromWeChatAsync();
+    let input = {
+      userName: 'admin',
+      password: 'admin'
+    };
+    let result = await staffService.loginAsync(input);
+    console.log(result);
   },
   methods: {
     onQueryTicket() {
@@ -104,7 +87,7 @@ export default {
         } 个文件，共选择了 ${files.length + fileList.length} 个文件`
       );
     },
-    beforeRemove(file, fileList) {
+    beforeRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     async myRequest(content) {

@@ -45,22 +45,17 @@
 </template>
 
 <script>
-import iExplainImg from "./../../assets/img/ReadQrAndIDCard.png";
-import iIdGetImg from "./../../assets/img/SwapIDCard.png";
-import iQrGetImg from "./../../assets/img/ScanQrCode.png";
 import canvasHelper from "@/utils/canvasHelper.js";
 import readTicketHelper from "@/utils/readTicketHelper.js";
 import validator from "@/utils/validator.js";
 import Logo from "@/components/Logo.vue";
 import Printing from "@/components/Printing.vue";
 import TicketFooter from "./../../components/TicketFooter.vue";
-import Keyboard from "./../../components/Keyboard.vue";
 
 export default {
   name: "HelloWorld",
   components: {
     TicketFooter,
-    Keyboard,
     Logo,
     Printing
   },
@@ -201,7 +196,7 @@ export default {
       console.log(buf);
       let self = this;
       if (process.env.NODE_ENV === "production") {
-        bridge.webAPI_print(buf, function(res) {
+        window.bridge.webAPI_print(buf, function(res) {
           self.$message(res.state);
           self.printState = res.state;
         });

@@ -110,16 +110,13 @@
 </template>
 
 <script>
-import iExplainImg from "./../../assets/img/ReadQrAndIDCard.png";
 import TicketFooter from "./../../components/TicketFooter.vue";
 import Logo from "@/components/Logo.vue";
 import Printing from "@/components/Printing.vue";
 import qrCodeHelper from "@/utils/qrCodeHelper.js";
 import validator from "@/utils/validator.js";
 import canvasHelper from "@/utils/canvasHelper.js";
-import qWebChannel from "@/utils/qWebChannel.js";
 import readTicketHelper from "@/utils/readTicketHelper.js";
-import printTicketService from "@/services/printTicketService.js";
 
 export default {
   name: "BuyTicket",
@@ -295,7 +292,7 @@ export default {
       console.log(buf);
       let self = this;
       if (process.env.NODE_ENV === "production") {
-        bridge.webAPI_print(buf, function(res) {
+        window.bridge.webAPI_print(buf, function(res) {
           self.$message(res.state);
           self.printState = res.state;
         });

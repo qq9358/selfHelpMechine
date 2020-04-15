@@ -46,10 +46,10 @@ export default {
     };
   },
   watch: {
-    value: function(val, oldVal) {
-      this.inputValue = this.value;
+    value: function(val) {
+      this.inputValue = val;
     },
-    inputValue: function(val, oldVal) {
+    inputValue: function(val) {
       this.$emit("on-input", val);
     }
   },

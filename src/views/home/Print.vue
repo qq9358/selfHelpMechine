@@ -20,10 +20,7 @@
 
 <script>
 import canvasHelper from "@/utils/canvasHelper.js";
-import qWebChannel from "@/utils/qWebChannel.js";
-import qrCodeHelper from "@/utils/qrCodeHelper.js";
 import iFfImage from "@/assets/img/ff.jpg";
-import iTestPng from "@/assets/img/test.png";
 import printTicketService from "@/services/printTicketService.js";
 
 export default {
@@ -77,7 +74,7 @@ export default {
 
     let self = this;
     if (process.env.NODE_ENV === "production") {
-      bridge.webAPI_print(buf, function(res) {
+      window.bridge.webAPI_print(buf, function(res) {
         self.$message(res.state);
       });
     } else {
@@ -93,7 +90,7 @@ export default {
       aEle.click();
       let self = this;
       if (process.env.NODE_ENV === "production") {
-        bridge.webAPI_print(buf, function(res) {
+        window.bridge.webAPI_print(buf, function(res) {
           self.$message(res.state);
         });
       } else {

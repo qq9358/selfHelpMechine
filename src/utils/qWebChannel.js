@@ -103,7 +103,7 @@ var QWebChannel = function (transport, initCallback) {
             // wrap
             channel.execId = Number.MIN_VALUE;
         }
-        if (data.hasOwnProperty("id")) {
+        if (Object.prototype.hasOwnProperty.call(data, "id")) {
             console.error("Cannot exec message with property id: " + JSON.stringify(data));
             return;
         }
@@ -124,7 +124,7 @@ var QWebChannel = function (transport, initCallback) {
     }
 
     this.handleResponse = function (message) {
-        if (!message.hasOwnProperty("id")) {
+        if (!Object.prototype.hasOwnProperty.call(message,"id")) {
             console.error("Invalid response message received: ", JSON.stringify(message));
             return;
         }
@@ -150,8 +150,8 @@ var QWebChannel = function (transport, initCallback) {
     };
 
     channel.exec({ type: QWebChannelMessageTypes.init }, function (data) {
-        for (var objectName in data) {
-            var object = new QObject(objectName, data[objectName], channel);
+        for (var dataItem in data) {
+            new QObject(dataItem, data[dataItem], channel);
         }
         // now unwrap properties, which might reference other registered objects
         for (var objectName in channel.objects) {
@@ -389,8 +389,8 @@ function QObject(name, data, webChannel) {
 
     data.signals.forEach(function (signal) { addSignal(signal, false); });
 
-    for (var name in data.enums) {
-        object[name] = data.enums[name];
+    for (var enumName in data.enums) {
+        object[enumName] = data.enums[enumName];
     }
 }
 

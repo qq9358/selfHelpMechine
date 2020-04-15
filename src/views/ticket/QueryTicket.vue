@@ -48,7 +48,6 @@
 <script>
 import iExplainImg from "./../../assets/img/ReadQrAndIDCard.png";
 import TicketFooter from "./../../components/TicketFooter.vue";
-import qWebChannel from "@/utils/qWebChannel.js";
 import readTicketHelper from "@/utils/readTicketHelper.js";
 import Logo from "@/components/Logo.vue";
 
