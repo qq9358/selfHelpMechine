@@ -10,8 +10,8 @@ const ajax = axios.create({
   // baseURL: 'http://192.168.1.68:8039/',
   // baseURL: '/api',
   // baseURL: 'http://192.168.1.64:8010/',
+  // baseURL: baseURL,
   baseURL: baseURL,
-  headers: { 'content-type': 'application/x-www-form-urlencoded' },
   timeout: 10000
 });
 

@@ -19,7 +19,7 @@ export default {
     },
     async drawCanvas(qrCodeImg, myCanvas, ticket) {
         let promise = new Promise(reslove => {
-            qrCodeImg.onload = async function (e) {
+            qrCodeImg.onload = async function () {
                 let canvasSet = myCanvas.getContext("2d");
                 // let imageData = canvasSet.getImageData(0, 0, myCanvas.width, myCanvas.height);
                 // for (let i = 0; i < imageData.data.length; i += 4) {
@@ -118,7 +118,7 @@ export default {
         reader.readAsArrayBuffer(blob);
         let buf = [];
         let promise = new Promise(reslove => {
-            reader.onload = async function (e) {
+            reader.onload = async function () {
                 buf = new Uint8Array(reader.result);
                 reslove();
             };

@@ -6,3 +6,5 @@ window.webApiIntranetUrl = "http://localhost:54474/";
 window.reportOuterNetUrl = "http://192.168.1.68/Egoal.Report.Web/";
 /*报表系统内网地址*/
 window.reportIntranetUrl = "http://192.168.1.68/Egoal.Report.Web/";
+/*售票点Id*/
+window.salePointId = "4";

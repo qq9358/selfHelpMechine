@@ -8,6 +8,7 @@ export default {
     sessionStorage.setItem(staff.staffInfo, JSON.stringify(response.result.staff));
     tokenService.setToken(response.result.token);
     sessionStorage.setItem(staff.permissions, JSON.stringify(response.result.permissions));
+    return response.result;
   },
   logout() {
     sessionStorage.removeItem(staff.staffInfo);

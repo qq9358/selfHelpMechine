@@ -40,17 +40,16 @@ export default {
     };
   },
   async created() {
-    console.log(process.env.NODE_ENV);
     if (navigator.userAgent.indexOf("Toon-pc") !== -1) {
       new qWebChannel(window.qt.webChannelTransport, function(channel) {
         window.bridge = channel.objects.cppObject;
       });
     }
-    let input = {
+
+    let result = await staffService.loginAsync({
       userName: 'admin',
       password: 'admin'
-    };
-    let result = await staffService.loginAsync(input);
+    });
     console.log(result);
   },
   methods: {

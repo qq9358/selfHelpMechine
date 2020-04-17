@@ -22,7 +22,7 @@
             <div class="thead-div-amount">金额</div>
           </div>-->
           <div class="div-tbody">
-            <div v-for="trow in ticketDatas" :key="trow.ticketTypeId" class="div-trow">
+            <div v-for="trow in currentTicketDatas" :key="trow.ticketTypeId" class="div-trow">
               <div class="div-tcol-name">{{trow.ticketTypeName}}</div>
               <div class="div-tcol-price">{{trow.unitPrice.toFixed(2)}}</div>
               <div class="div-tcol-num">
@@ -58,7 +58,8 @@
             background
             layout="prev,pager,next"
             :total="ticketDatas.length"
-            :page-size="5"
+            :page-size="pageSize"
+            @current-change="currentPageChange"
           />
         </div>
       </div>
@@ -97,14 +98,19 @@
         </div>
         <div class="pay-explain">付款过程中请务关闭窗口</div>
       </el-dialog>
-      
+
       <!-- <canvas ref="canvasTest" style="display: none" /> -->
     </div>
     <printing
-        v-model="showPrintDialog"
-        :currentPrintNumProp="currentPrintNum"
-        :totalNumProp="totalNum"
-      />
+      v-model="showPrintDialog"
+      :currentPrintNumProp="currentPrintNum"
+      :totalNumProp="totalNum"
+    />
+    <read-cert
+      v-model="showReadCert"
+      :currentReadNumProp="currentReadNum"
+      :totalNumProp="totalReadNum"
+    />
     <ticket-footer />
   </div>
 </template>
@@ -113,17 +119,21 @@
 import TicketFooter from "./../../components/TicketFooter.vue";
 import Logo from "@/components/Logo.vue";
 import Printing from "@/components/Printing.vue";
+import ReadCert from "@/components/ReadCert.vue";
 import qrCodeHelper from "@/utils/qrCodeHelper.js";
 import validator from "@/utils/validator.js";
 import canvasHelper from "@/utils/canvasHelper.js";
 import readTicketHelper from "@/utils/readTicketHelper.js";
+import ticketTypeService from "@/services/ticketTypeService.js";
+import paymentService from "@/services/paymentService.js";
 
 export default {
   name: "BuyTicket",
   components: {
     TicketFooter,
     Logo,
-    Printing
+    Printing,
+    ReadCert
   },
   data() {
     return {
@@ -154,6 +164,7 @@ export default {
           personNum: "3    人"
         }
       ],
+      currentTicketDatas: [],
       totalNum: 0,
       totalAmount: 0,
       currentPage: 1,
@@ -182,11 +193,50 @@ export default {
       currentVideo: 0,
       showPrintDialog: false,
       currentPrintNum: 0,
-      printState: ""
+      printState: "",
+      pageSize: 5,
+      listNo: "",
+      totalReadNum: 0,
+      currentReadNum: 0
     };
   },
   async mounted() {},
+  async created() {
+    await this.getTicketDatas();
+  },
   methods: {
+    async getTicketDatas() {
+      const ticketTypes = await ticketTypeService.getTicketTypesForWeiXinSaleAsync(
+        {
+          publicSaleFlag: true
+        }
+      );
+      console.log(ticketTypes);
+      this.ticketDatas = ticketTypes.map(d => {
+        return {
+          ticketTypeId: d.id,
+          ticketTypeName: d.name,
+          unitPrice: d.price,
+          bookNum: 0,
+          amount: 0,
+          personNum: "1    人",
+          needCertFlag: d.needCertFlag
+        };
+      });
+      this.getCurrentTicketDatas(1);
+    },
+    getCurrentTicketDatas(currentPage) {
+      this.currentTicketDatas = [];
+      for (
+        let i = (currentPage - 1) * this.pageSize;
+        i < currentPage * this.pageSize;
+        i++
+      ) {
+        if (i < this.ticketDatas.length) {
+          this.currentTicketDatas.push(this.ticketDatas[i]);
+        }
+      }
+    },
     onBack() {
       this.$router.go(-1);
     },
@@ -207,9 +257,13 @@ export default {
       if (this.totalAmount <= 0) {
         this.$message(validator.errorMessage("请先选择要支付的票类数量"));
       } else {
+        await this.createOrder();
+
         if (a === "微信") {
+          await this.weChatPay();
           readTicketHelper.playVideo("请使用微信扫码付款");
         } else {
+          await this.aliPay();
           readTicketHelper.playVideo("请使用支付宝扫码付款");
         }
         this.expireSeconds = 555;
@@ -225,6 +279,15 @@ export default {
           }
         }, 1000);
       }
+    },
+    async createOrder(){
+      
+    },
+    async weChatPay(){
+      await paymentService.nativePayAsync({listNo: this.listNo, payTypeId: 8});
+    },
+    async aliPay(){
+      await paymentService.nativePayAsync({listNo: this.listNo, payTypeId: 9});
     },
     clear() {
       clearInterval(this.timer);
@@ -299,6 +362,9 @@ export default {
       } else {
         self.printState = "dn";
       }
+    },
+    currentPageChange(event) {
+      this.getCurrentTicketDatas(event);
     }
   }
 };
