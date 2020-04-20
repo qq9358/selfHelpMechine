@@ -27,9 +27,10 @@
               <div class="div-tcol-price">{{trow.unitPrice.toFixed(2)}}</div>
               <div class="div-tcol-num">
                 <el-input-number
-                  v-model="trow.bookNum"
-                  @change="bookNumChange(trow.ticketTypeId)"
+                  v-model="trow.quantity"
+                  @change="quantityChange(trow.ticketTypeId)"
                   :min="0"
+                  :max="trow.maxBuyNum"
                   size="large"
                 />
               </div>
@@ -86,7 +87,9 @@
         :title="payTitle"
         :visible.sync="showPayDialog"
         class="div-pay-dialog"
-        @close="onClose"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        :show-close="false"
       >
         <div class="pay-type-text">{{payTypeName}}扫码付款</div>
         <div class="div-qr-code">
@@ -108,8 +111,9 @@
     />
     <read-cert
       v-model="showReadCert"
-      :currentReadNumProp="currentReadNum"
-      :totalNumProp="totalReadNum"
+      :ticket-data="currentReadTicketData"
+      @on-success="onReadCertSuccess"
+      @on-timeout="onReadCertTimeout"
     />
     <ticket-footer />
   </div>
@@ -126,6 +130,8 @@ import canvasHelper from "@/utils/canvasHelper.js";
 import readTicketHelper from "@/utils/readTicketHelper.js";
 import ticketTypeService from "@/services/ticketTypeService.js";
 import paymentService from "@/services/paymentService.js";
+import orderService from "@/services/orderService.js";
+import dayjs from "dayjs";
 
 export default {
   name: "BuyTicket",
@@ -143,7 +149,7 @@ export default {
           ticketTypeId: 1,
           ticketTypeName: "成人票",
           unitPrice: 12.34,
-          bookNum: 0,
+          quantity: 0,
           amount: 0,
           personNum: "1    人"
         },
@@ -151,7 +157,7 @@ export default {
           ticketTypeId: 2,
           ticketTypeName: "学生票",
           unitPrice: 23.4,
-          bookNum: 0,
+          quantity: 0,
           amount: 0,
           personNum: "2    人"
         },
@@ -159,7 +165,7 @@ export default {
           ticketTypeId: 3,
           ticketTypeName: "学生票",
           unitPrice: 34,
-          bookNum: 0,
+          quantity: 0,
           amount: 0,
           personNum: "3    人"
         }
@@ -175,7 +181,7 @@ export default {
       payTypeId: 0,
       expireSeconds: 5,
       qrCodeSrc: "",
-      timer: -1,
+      payTimer: -1,
       companyName: "陈典火雨中国有限公司",
       distributorName: "小芬同学",
       salePointName: "自助售票机1号",
@@ -196,34 +202,41 @@ export default {
       printState: "",
       pageSize: 5,
       listNo: "",
-      totalReadNum: 0,
-      currentReadNum: 0
+      currentReadNum: 0,
+      alreadyReadNum: 0,
+      currentReadTicketData: {},
+      showReadCert: false
     };
   },
-  async mounted() {},
   async created() {
     await this.getTicketDatas();
   },
   methods: {
     async getTicketDatas() {
-      const ticketTypes = await ticketTypeService.getTicketTypesForWeiXinSaleAsync(
+      const ticketTypes = await ticketTypeService.getTicketTypesForSelfHelpAsync(
         {
           publicSaleFlag: true
         }
       );
-      console.log(ticketTypes);
-      this.ticketDatas = ticketTypes.map(d => {
-        return {
-          ticketTypeId: d.id,
-          ticketTypeName: d.name,
-          unitPrice: d.price,
-          bookNum: 0,
-          amount: 0,
-          personNum: "1    人",
-          needCertFlag: d.needCertFlag
-        };
-      });
-      this.getCurrentTicketDatas(1);
+      if (ticketTypes) {
+        this.ticketDatas = ticketTypes.map(d => {
+          return {
+            ticketTypeId: d.id,
+            ticketTypeName: d.name,
+            unitPrice: d.price,
+            quantity: 0,
+            amount: 0,
+            personNum: "1    人",
+            needCertFlag: d.needCertFlag,
+            startAge: 10,
+            endAge: 45,
+            tourists: [],
+            minBuyNum: d.minBuyNum,
+            maxBuyNum: d.maxBuyNum
+          };
+        });
+        this.getCurrentTicketDatas(1);
+      }
     },
     getCurrentTicketDatas(currentPage) {
       this.currentTicketDatas = [];
@@ -240,57 +253,123 @@ export default {
     onBack() {
       this.$router.go(-1);
     },
-    bookNumChange(changeTicketTypeId) {
+    quantityChange(changeTicketTypeId) {
       let ticketData = null;
       this.totalNum = 0;
       this.totalAmount = 0;
       for (let i = 0; i < this.ticketDatas.length; i++) {
         ticketData = this.ticketDatas[i];
         if (ticketData.ticketTypeId === changeTicketTypeId) {
-          ticketData.amount = ticketData.bookNum * ticketData.unitPrice;
+          ticketData.amount = ticketData.quantity * ticketData.unitPrice;
         }
-        this.totalNum += ticketData.bookNum;
+        this.totalNum += ticketData.quantity;
         this.totalAmount += ticketData.amount;
       }
     },
-    async onPayClick(a) {
+    currentPageChange(event) {
+      this.getCurrentTicketDatas(event);
+    },
+    async onPayClick(event) {
       if (this.totalAmount <= 0) {
         this.$message(validator.errorMessage("请先选择要支付的票类数量"));
       } else {
-        await this.createOrder();
-
-        if (a === "微信") {
-          await this.weChatPay();
-          readTicketHelper.playVideo("请使用微信扫码付款");
-        } else {
-          await this.aliPay();
-          readTicketHelper.playVideo("请使用支付宝扫码付款");
-        }
-        this.expireSeconds = 555;
-        this.payTypeName = a;
-        this.showPayDialog = true;
-        this.payTitle = `支付 ${this.totalAmount.toFixed(2)} 元`;
-        this.qrCodeSrc = await qrCodeHelper.createQrCodeAsync("asdfasdf", 300);
-        this.timer = setInterval(() => {
-          this.expireSeconds--;
-          if (this.expireSeconds < 1) {
-            this.clear();
-            this.showPayDialog = false;
-          }
-        }, 1000);
+        this.payTypeName = event;
+        this.currentReadNum = 0;
+        this.alreadyReadNum = 0;
+        this.startReadCert();
       }
     },
-    async createOrder(){
-      
+    startReadCert() {
+      let ticketData = this.ticketDatas[this.currentReadNum++];
+      console.log(ticketData);
+      if (ticketData.quantity > 0 && ticketData.needCertFlag) {
+        this.currentReadTicketData = ticketData;
+        this.showReadCert = true;
+      } else {
+        this.startReadCert();
+      }
     },
-    async weChatPay(){
-      await paymentService.nativePayAsync({listNo: this.listNo, payTypeId: 8});
+    async onReadCertSuccess(tourist) {
+      this.showReadCert = false;
+      this.currentReadTicketData.tourists.push(tourist);
+
+      this.$message("读取身份证成功");
+      this.alreadyReadNum++;
+      if (this.alreadyReadNum === this.totalNum) {
+        await this.createOrder();
+        await this.startPay();
+        clearInterval(this.readCertTimer);
+      } else {
+        let self = this;
+        setTimeout(function() {
+          self.startReadCert();
+        }, 2000);
+      }
     },
-    async aliPay(){
-      await paymentService.nativePayAsync({listNo: this.listNo, payTypeId: 9});
+    onReadCertTimeout() {
+      this.showReadCert = false;
+      self.$message("读取身份证信息超时，请重新发起订单");
+      clearInterval(self.readCertTimer);
+    },
+    async createOrder() {
+      const createOrderInput = {
+        travelDate: dayjs().toDateString(),
+        items: this.ticketDatas.filter(a => a.quantity > 0)
+      };
+      const createResult = await orderService.createSelfHelpOrderAsync(
+        createOrderInput
+      );
+      this.listNo = createResult.listNo;
+      if (createResult.shouldPay) {
+        this.showPayDialog = true;
+      }
+    },
+    async startPay() {
+      if (this.payTypeName === "微信") {
+        await this.weChatPay();
+        readTicketHelper.playVideo("请使用微信扫码付款");
+      } else {
+        await this.aliPay();
+        readTicketHelper.playVideo("请使用支付宝扫码付款");
+      }
+
+      this.expireSeconds = 555;
+      this.showPayDialog = true;
+      this.payTitle = `支付 ${this.totalAmount.toFixed(2)} 元`;
+      this.payTimer = setInterval(async () => {
+        this.expireSeconds--;
+        if (this.expireSeconds < 1) {
+          this.$message("订单支付超时，请重新发起订单");
+          this.clear();
+          this.showPayDialog = false;
+        }
+        const netPayResult = await paymentService.getNetPayOrderAsync(
+          this.listNo
+        );
+        if (netPayResult.paySuccess) {
+          this.$message("订单支付成功");
+          this.showPayDialog = false;
+          await this.onClose();
+        }
+      }, 1000);
+    },
+
+    async weChatPay() {
+      const payResult = await paymentService.nativePayAsync({
+        listNo: this.listNo,
+        payTypeId: 8
+      });
+      this.qrCodeSrc = await qrCodeHelper.createQrCodeAsync(payResult, 300);
+    },
+    async aliPay() {
+      const payResult = await paymentService.nativePayAsync({
+        listNo: this.listNo,
+        payTypeId: 9
+      });
+      this.qrCodeSrc = await qrCodeHelper.createQrCodeAsync(payResult, 300);
     },
     clear() {
-      clearInterval(this.timer);
+      clearInterval(this.payTimer);
     },
     beforeRouteLeave(to, from, next) {
       this.clear();
@@ -304,7 +383,7 @@ export default {
     async printerTickets() {
       let tickets = [];
       for (let i = 0; i < this.ticketDatas.length; i++) {
-        for (let j = 0; j < this.ticketDatas[i].bookNum; j++) {
+        for (let j = 0; j < this.ticketDatas[i].quantity; j++) {
           tickets.push(this.setPrintTicket(this.ticketDatas[i]));
         }
       }
@@ -352,7 +431,6 @@ export default {
       // image.src = await canvasHelper.setCanvas(myCanvas, ticket);
 
       let buf = await canvasHelper.getPrinterArray(ticket);
-      console.log(buf);
       let self = this;
       if (process.env.NODE_ENV === "production") {
         window.bridge.webAPI_print(buf, function(res) {
@@ -362,9 +440,6 @@ export default {
       } else {
         self.printState = "dn";
       }
-    },
-    currentPageChange(event) {
-      this.getCurrentTicketDatas(event);
     }
   }
 };

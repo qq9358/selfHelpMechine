@@ -10,7 +10,8 @@ export default {
     return response.result;
   },
   async nativePayAsync(input){
-    let response = await ajax.pst(`/payment/NativePayAsync`, input);
+    console.log(input);
+    let response = await ajax.post(`/payment/NativePayAsync`, input);
     return response.result;
   }
 };

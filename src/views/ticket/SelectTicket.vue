@@ -193,7 +193,6 @@ export default {
       // image.src = await canvasHelper.setCanvas(myCanvas, ticket);
 
       let buf = await canvasHelper.getPrinterArray(ticket);
-      console.log(buf);
       let self = this;
       if (process.env.NODE_ENV === "production") {
         window.bridge.webAPI_print(buf, function(res) {

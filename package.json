@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "dayjs": "^1.8.24",
     "element-ui": "^2.13.1",
     "qrcode": "^1.4.4",
     "vue": "^2.6.11",

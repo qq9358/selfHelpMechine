@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import "@/utils/dayjs.js";
+
 export default {
   name: 'App'
 }

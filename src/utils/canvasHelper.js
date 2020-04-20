@@ -107,7 +107,6 @@ export default {
         while (n--) {
             u8arr[n] = bstr.charCodeAt(n); // 转换编码后才可以使用charCodeAt 找到Unicode编码
         }
-        console.log(u8arr);
         return new Blob([u8arr], {
             type
         });

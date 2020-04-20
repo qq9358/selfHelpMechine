@@ -4,7 +4,6 @@ import tokenService from "@/services/tokenService.js";
 export default {
   async loginFromWeChatAsync(input) {
     const response = await ajax.post("/member/LoginFromWeChatAsync", input);
-    console.log(response);
     this.setMember(response);
   },
   async bindStaffAsync(input) {

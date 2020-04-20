@@ -64,7 +64,8 @@ export default {
       explainImgSrc: iExplainImg,
       footerText: "服务电话：13203007572",
       idCard: {
-        idNum: ""
+        idNum: "",
+        name: ""
       },
       ticket: {
         qrCode: ""
@@ -110,6 +111,8 @@ export default {
     };
   },
   created() {
+    // readTicketHelper.readIdCard(this.idCard);
+    // readTicketHelper.getIdNumAge(this.idCard.idNum);
     this.loopReadInput();
   },
   beforeRouteLeave(to, from, next) {

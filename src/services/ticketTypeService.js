@@ -22,5 +22,13 @@ export default {
       `/ticketType/GetTicketTypeChangCiComboboxItemsAsync?ticketTypeId=${ticketTypeId}&date=${date}`
     );
     return response.result;
+  },
+  async getTicketTypesForLocalSaleAsync(input) {
+    const response = await ajax.post("/ticketType/GetTicketTypesForLocalSaleAsync", input);
+    return response.ressult;
+  },
+  async getTicketTypesForSelfHelpAsync(input) {
+    const response = await ajax.post("/ticketType/GetTicketTypesForSelfHelpAsync", input);
+    return response.result;
   }
 };
