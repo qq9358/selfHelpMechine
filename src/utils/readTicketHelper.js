@@ -27,7 +27,7 @@ export default {
                 ticket.qrCode = res.code;
             });
         } else {
-            ticket.qrCode = "aasdfasdf";
+            ticket.qrCode = "J2200420000002273";
         }
     },
     readIdCard(idCard) {

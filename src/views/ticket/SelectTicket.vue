@@ -59,65 +59,70 @@ export default {
     Logo,
     Printing
   },
+  props: {
+    ticketDatas:{
+      type: Object
+    }
+  },
   data() {
     return {
       titleOne: "选择取票",
-      ticketDatas: [
-        {
-          rowNum: 1,
-          ticketTypeName: "火车票",
-          ticketCode: "TN23423041231",
-          personNum: "1    人",
-          unitPrice: 12.34,
-          startDate: "2020-04-01",
-          endDate: "2020-04-02"
-        },
-        {
-          rowNum: 1,
-          ticketTypeName: "火车票",
-          ticketCode: "TN23423041232",
-          personNum: "1    人",
-          unitPrice: 12.34,
-          startDate: "2020-04-01",
-          endDate: "2020-04-02"
-        },
-        {
-          rowNum: 1,
-          ticketTypeName: "火车票",
-          ticketCode: "TN23423041233",
-          personNum: "1    人",
-          unitPrice: 12.34,
-          startDate: "2020-04-01",
-          endDate: "2020-04-02"
-        },
-        {
-          rowNum: 1,
-          ticketTypeName: "火车票",
-          ticketCode: "TN23423041234",
-          personNum: "4    人",
-          unitPrice: 12.34,
-          startDate: "2020-04-01",
-          endDate: "2020-04-02"
-        },
-        {
-          rowNum: 1,
-          ticketTypeName: "火车票",
-          ticketCode: "TN23423041235",
-          personNum: "3    人",
-          unitPrice: 12.34,
-          startDate: "2020-04-01",
-          endDate: "2020-04-02"
-        },
-        {
-          rowNum: 1,
-          ticketTypeName: "火车票",
-          ticketCode: "TN23423041236",
-          personNum: "2    人",
-          unitPrice: 12.34,
-          startDate: "2020-04-01",
-          endDate: "2020-04-02"
-        }
-      ],
+      // ticketDatas: [
+      //   {
+      //     rowNum: 1,
+      //     ticketTypeName: "火车票",
+      //     ticketCode: "TN23423041231",
+      //     personNum: "1    人",
+      //     unitPrice: 12.34,
+      //     startDate: "2020-04-01",
+      //     endDate: "2020-04-02"
+      //   },
+      //   {
+      //     rowNum: 1,
+      //     ticketTypeName: "火车票",
+      //     ticketCode: "TN23423041232",
+      //     personNum: "1    人",
+      //     unitPrice: 12.34,
+      //     startDate: "2020-04-01",
+      //     endDate: "2020-04-02"
+      //   },
+      //   {
+      //     rowNum: 1,
+      //     ticketTypeName: "火车票",
+      //     ticketCode: "TN23423041233",
+      //     personNum: "1    人",
+      //     unitPrice: 12.34,
+      //     startDate: "2020-04-01",
+      //     endDate: "2020-04-02"
+      //   },
+      //   {
+      //     rowNum: 1,
+      //     ticketTypeName: "火车票",
+      //     ticketCode: "TN23423041234",
+      //     personNum: "4    人",
+      //     unitPrice: 12.34,
+      //     startDate: "2020-04-01",
+      //     endDate: "2020-04-02"
+      //   },
+      //   {
+      //     rowNum: 1,
+      //     ticketTypeName: "火车票",
+      //     ticketCode: "TN23423041235",
+      //     personNum: "3    人",
+      //     unitPrice: 12.34,
+      //     startDate: "2020-04-01",
+      //     endDate: "2020-04-02"
+      //   },
+      //   {
+      //     rowNum: 1,
+      //     ticketTypeName: "火车票",
+      //     ticketCode: "TN23423041236",
+      //     personNum: "2    人",
+      //     unitPrice: 12.34,
+      //     startDate: "2020-04-01",
+      //     endDate: "2020-04-02"
+      //   }
+      // ],
       selections: [],
       showPrintDialog: false,
       currentPrintNum: 0,

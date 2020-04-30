@@ -18,23 +18,32 @@
       <div v-else class="body-div">
         <div class="explain-text">
           <div>票号：{{queryResult.ticketCode}}</div>
-          <div>状态：{{queryResult.statusName}}</div>
+          <div>状态：{{queryResult.ticketStatusName}}</div>
         </div>
         <div class="tab-div">
           <div class="tab-head">
-            <div class="head-div-park">区域</div>
+            <div class="head-div-ground">区域</div>
             <div class="head-div-total">总次数</div>
             <div class="head-div-surplus">剩余次数</div>
             <div class="head-div-time">最后检票时间</div>
           </div>
           <div class="tab-body">
-            <div v-for="park in queryResult.parks" :key="park.id" class="tab-row">
-              <div class="row-div-park">{{park.name}}</div>
-              <div class="row-div-total">{{park.totalNum}}</div>
-              <div class="row-div-surplus">{{park.surplusNum}}</div>
-              <div class="row-div-time">{{park.lastCheckTime}}</div>
+            <div v-for="ground in queryResult.pageResult.items" :key="ground.id" class="tab-row">
+              <div class="row-div-ground">{{ground.groundName}}</div>
+              <div class="row-div-total">{{ground.totalNum}}</div>
+              <div class="row-div-surplus">{{ground.surplusNum}}</div>
+              <div class="row-div-time">{{ground.lastCheckTime}}</div>
             </div>
           </div>
+        </div>
+        <div class="div-pagination">
+          <el-pagination
+            background
+            layout="prev,pager,next"
+            :total="queryResult.pageResult.totalCount"
+            :page-size="pageSize"
+            @current-change="currentPageChange"
+          />
         </div>
       </div>
       <div class="button-back-div">
@@ -49,6 +58,7 @@
 import iExplainImg from "./../../assets/img/ReadQrAndIDCard.png";
 import TicketFooter from "./../../components/TicketFooter.vue";
 import readTicketHelper from "@/utils/readTicketHelper.js";
+import orderService from "@/services/orderService.js";
 import Logo from "@/components/Logo.vue";
 
 export default {
@@ -74,46 +84,52 @@ export default {
       showQueryResult: false,
       queryResult: {
         ticketCode: "TN23420341234324",
-        statusName: "待使用",
-        parks: [
+        ticketStatusName: "待使用",
+        grounds: [
           {
-            name: "大门",
+            groundName: "大门",
             totalNum: 5,
             surplusNum: 1,
             lastCheckTime: "2020-05-01 11:59:59"
           },
           {
-            name: "馆一",
+            groundName: "馆一",
             totalNum: 5,
             surplusNum: 1,
             lastCheckTime: "2020-05-01 11:59:59"
           },
           {
-            name: "奇观",
+            groundName: "奇观",
             totalNum: 5,
             surplusNum: 1,
             lastCheckTime: "2020-05-01 11:59:59"
           },
           {
-            name: "妙林",
+            groundName: "妙林",
             totalNum: 5,
             surplusNum: 1,
             lastCheckTime: "2020-05-01 11:59:59"
           },
           {
-            name: "止水",
+            groundName: "止水",
             totalNum: 5,
             surplusNum: 1,
             lastCheckTime: "2020-05-01 11:59:59"
           }
         ]
+      },
+      pageSize: 5,
+      queryInput: {
+        skipCount: 0,
+        maxResultCount: 5,
+        ticketCode: ""
       }
     };
   },
-  created() {
+  async created() {
     // readTicketHelper.readIdCard(this.idCard);
     // readTicketHelper.getIdNumAge(this.idCard.idNum);
-    this.loopReadInput();
+    await this.loopReadInput();
   },
   beforeRouteLeave(to, from, next) {
     this.clear();
@@ -123,28 +139,41 @@ export default {
     onBack() {
       this.$router.go(-1);
     },
-    loopReadInput() {
+    async loopReadInput() {
       let self = this;
-      this.readInputTimer = setInterval(() => {
-        if (self.idCard.idNum) {
-          self.queryTicket("idCard", self.idCard.idNum);
-        }
-        if (self.ticket.qrCode) {
-          self.queryTicket("qrCode", self.ticket.qrCode);
-        }
+      this.readInputTimer = setInterval(async () => {
         readTicketHelper.readIdCard(self.idCard);
+        if (self.idCard.idNum) {
+          await self.handleReadResult("idCard", self.idCard.idNum);
+          return;
+        }
         readTicketHelper.readQrCode(self.ticket);
+        if (self.ticket.qrCode) {
+          await self.handleReadResult("qrCode", self.ticket.qrCode);
+        }
       }, 250);
     },
-    queryTicket(type, value) {
+    async handleReadResult(type, value) {
       this.$message(value);
       readTicketHelper.playVideo();
       this.clear();
+      this.queryInput.ticketCode = value;
+      await this.queryTicket();
+    },
+    async queryTicket() {
+      this.queryResult = await orderService.getSelfHelpTicketGroundAsync(
+        this.queryInput
+      );
+      console.log(this.queryResult);
       this.showQueryResult = true;
     },
     clear() {
       clearInterval(this.readInputTimer);
     },
+    async currentPageChange(event) {
+      this.queryInput.skipCount = (event - 1) * this.pageSize;
+      await this.queryTicket();
+    }
   }
 };
 </script>
@@ -192,7 +221,7 @@ export default {
         padding: 15px 0px 15px 0px;
         border-bottom: 1px solid #e6e6e6;
         font-size: 25px;
-        .head-div-park {
+        .head-div-ground {
           width: 150px;
         }
         .head-div-total {
@@ -212,7 +241,7 @@ export default {
           display: flex;
           justify-content: space-around;
           border-bottom: 1px solid #e6e6e6;
-          .row-div-park {
+          .row-div-ground {
             width: 150px;
           }
           .row-div-total {

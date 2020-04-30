@@ -1,3 +1,21 @@
+.div-pagination {
+  padding: 10px 0px 0px 0px;
+  /deep/ .el-pager li {
+    padding: 0 14px;
+    font-size: 20px;
+    height: 34px;
+    line-height: 34px;
+  }
+  /deep/ .el-icon {
+    font-size: 20px;
+  }
+  /deep/ .el-pagination button {
+    height: 34px;
+    line-height: 34px;
+    min-width: 36px;
+  }
+}
+
 body {
   margin: 0px;
 }

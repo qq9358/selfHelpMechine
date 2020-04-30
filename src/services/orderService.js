@@ -68,11 +68,19 @@ export default {
       listNo
     });
   },
-  async createSelfHelpOrderAsync(input){
+  async createSelfHelpOrderAsync(input) {
     let response = await ajax.post("/order/CreateSelfHelpOrderAsync", input);
     return response.result;
   },
-  CreateOrderInput: function() {
+  async getSelfHelpTicketGroundAsync(input) {
+    let response = await ajax.post("/order/GetSelfHelpTicketGroundAsync", input);
+    return response.result;
+  },
+  async getOrderInfoForQuery(input) {
+    let response = await ajax.post("/order/GetOrderInfoForQuery", input);
+    return response.result;
+  },
+  CreateOrderInput: function () {
     this.travelDate = "";
     this.adultQuantity = 0;
     this.adults = [];

@@ -204,6 +204,7 @@ export default {
       listNo: "",
       currentReadNum: 0,
       alreadyReadNum: 0,
+      needReadNum: 0,
       currentReadTicketData: {},
       showReadCert: false
     };
@@ -276,17 +277,26 @@ export default {
         this.payTypeName = event;
         this.currentReadNum = 0;
         this.alreadyReadNum = 0;
-        this.startReadCert();
+        this.needReadNum = 0;
+        // for(let i=0;)
+        await this.startReadCert();
       }
     },
-    startReadCert() {
-      let ticketData = this.ticketDatas[this.currentReadNum++];
-      console.log(ticketData);
-      if (ticketData.quantity > 0 && ticketData.needCertFlag) {
-        this.currentReadTicketData = ticketData;
-        this.showReadCert = true;
-      } else {
-        this.startReadCert();
+    async startReadCert() {
+      if (this.alreadyReadNum === this.needReadNum) {
+        await this.createOrder();
+        await this.startPay();
+        clearInterval(this.readCertTimer);
+      }
+      if (this.currentReadNum < this.ticketDatas.length) {
+        let ticketData = this.ticketDatas[this.currentReadNum++];
+        console.log(ticketData);
+        if (ticketData.quantity > 0 && ticketData.needCertFlag) {
+          this.currentReadTicketData = ticketData;
+          this.showReadCert = true;
+        } else {
+          await this.startReadCert();
+        }
       }
     },
     async onReadCertSuccess(tourist) {
@@ -295,16 +305,11 @@ export default {
 
       this.$message("读取身份证成功");
       this.alreadyReadNum++;
-      if (this.alreadyReadNum === this.totalNum) {
-        await this.createOrder();
-        await this.startPay();
-        clearInterval(this.readCertTimer);
-      } else {
-        let self = this;
-        setTimeout(function() {
-          self.startReadCert();
-        }, 2000);
-      }
+
+      let self = this;
+      setTimeout(async function() {
+        await self.startReadCert();
+      }, 2000);
     },
     onReadCertTimeout() {
       this.showReadCert = false;
@@ -582,23 +587,6 @@ export default {
       }
       .page-num {
         padding: 0px 15px 0px 15px;
-      }
-    }
-    .div-pagination {
-      padding: 10px 0px 0px 0px;
-      /deep/ .el-pager li {
-        padding: 0 14px;
-        font-size: 20px;
-        height: 34px;
-        line-height: 34px;
-      }
-      /deep/ .el-icon {
-        font-size: 20px;
-      }
-      /deep/ .el-pagination button {
-        height: 34px;
-        line-height: 34px;
-        min-width: 36px;
       }
     }
   }

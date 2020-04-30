@@ -83,6 +83,7 @@ import TicketFooter from "./../../components/TicketFooter.vue";
 import Keyboard from "./../../components/Keyboard.vue";
 import Logo from "@/components/Logo.vue";
 import readTicketHelper from "@/utils/readTicketHelper.js";
+import orderService from "@/services/orderService.js";
 import validator from "@/utils/validator.js";
 
 export default {
@@ -98,7 +99,7 @@ export default {
       explainOne: "请使用门票二维码或二代证查询门票信息",
       explainImgSrc: iExplainImg,
       footerText: "服务电话：13203007572",
-      currentTab: 0,
+      currentTab: 2,
       idGetSrc: iIdGetImg,
       qrGetSrc: iQrGetImg,
       listNo: {
@@ -119,7 +120,8 @@ export default {
       },
       ticket: {
         qrCode: ""
-      }
+      },
+      queryResult: []
     };
   },
   created() {
@@ -133,10 +135,10 @@ export default {
     onBack() {
       this.$router.go(-1);
     },
-    onTabsClick(a) {
-      this.currentTab = a;
+    onTabsClick(event) {
+      this.currentTab = event;
       this.clear();
-      switch (a) {
+      switch (event) {
         case 0:
           this.readIdCard();
           break;
@@ -147,11 +149,11 @@ export default {
           console.log("default");
       }
     },
-    onFocus(a) {
-      if (a !== this.currentInput) {
+    onFocus(event) {
+      if (event !== this.currentInput) {
         this.showKeyboard = false;
-        this.currentInput = a;
-        if (a === "listNo") {
+        this.currentInput = event;
+        if (event === "listNo") {
           this.currentInputValue = this.listNo.vmodel;
         } else {
           this.currentInputValue = this.mobile.vmodel;
@@ -162,11 +164,11 @@ export default {
         }, 500);
       }
     },
-    onInput(a) {
+    onInput(event) {
       if (this.currentInput === "listNo") {
-        this.listNo.vmodel = a;
+        this.listNo.vmodel = event;
       } else {
-        this.mobile.vmodel = a;
+        this.mobile.vmodel = event;
       }
     },
     readIdCard() {
@@ -221,12 +223,18 @@ export default {
         this.$message(validator.errorMessage(result.message));
         return;
       }
-      this.$message("enter");
+      const input = {
+        listNo: this.listNo.vmodel,
+        mobile: this.mobile.vmodel
+      }
+      this.queryResult = orderService.getOrderInfoForQuery(input);
+      console.log(this.queryResult);
       this.selectTicket();
     },
     selectTicket() {
       this.$router.replace({
-        name: "selectTicket"
+        name: "selectTicket",
+        ticketDatas: this.queryResult
       });
     },
     clear() {
