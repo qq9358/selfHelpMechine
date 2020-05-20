@@ -76,8 +76,8 @@ export default {
     let response = await ajax.post("/order/GetSelfHelpTicketGroundAsync", input);
     return response.result;
   },
-  async getOrderInfoForQuery(input) {
-    let response = await ajax.post("/order/GetOrderInfoForQuery", input);
+  async getSelfHelpOrderTicketAsync(input) {
+    let response = await ajax.post("/order/GetSelfHelpOrderTicketAsync", input);
     return response.result;
   },
   CreateOrderInput: function () {

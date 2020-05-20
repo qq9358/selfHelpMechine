@@ -142,7 +142,7 @@ export default {
     async loopReadInput() {
       let self = this;
       this.readInputTimer = setInterval(async () => {
-        readTicketHelper.readIdCard(self.idCard);
+        // readTicketHelper.readIdCard(self.idCard);
         if (self.idCard.idNum) {
           await self.handleReadResult("idCard", self.idCard.idNum);
           return;
@@ -164,7 +164,6 @@ export default {
       this.queryResult = await orderService.getSelfHelpTicketGroundAsync(
         this.queryInput
       );
-      console.log(this.queryResult);
       this.showQueryResult = true;
     },
     clear() {

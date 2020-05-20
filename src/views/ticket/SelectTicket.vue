@@ -16,14 +16,14 @@
             stripe
             @selection-change="ticketSelectChange"
           >
-            <el-table-column type="selection" min-width="55" />
-            <el-table-column prop="rowNum" label="序号" min-width="60" />
-            <el-table-column prop="ticketTypeName" label="票类" min-width="100" />
-            <el-table-column prop="ticketCode" label="票号" min-width="120" />
-            <el-table-column prop="personNum" label="人数" min-width="60" />
-            <el-table-column prop="unitPrice" label="金额" min-width="80" />
-            <el-table-column prop="startDate" label="起始日期" min-width="100" />
-            <el-table-column prop="endDate" label="截止日期" min-width="100" />
+            <el-table-column type="selection" min-width="40" />
+            <el-table-column prop="rowNum" label="序号" min-width="40" />
+            <el-table-column prop="ticketTypeName" label="票类" min-width="90" />
+            <el-table-column prop="ticketCode" label="票号" min-width="145" />
+            <el-table-column prop="personNum" label="人数" min-width="40" />
+            <el-table-column prop="reaMoney" label="金额" min-width="60" />
+            <el-table-column prop="ctime" label="起始日期" min-width="100" />
+            <el-table-column prop="etime" label="截止日期" min-width="100" />
           </el-table>
         </div>
         <div class="div-pagination">
@@ -60,69 +60,13 @@ export default {
     Printing
   },
   props: {
-    ticketDatas:{
-      type: Object
+    ticketDatas: {
+      type: Array
     }
   },
   data() {
     return {
       titleOne: "选择取票",
-      // ticketDatas: [
-      //   {
-      //     rowNum: 1,
-      //     ticketTypeName: "火车票",
-      //     ticketCode: "TN23423041231",
-      //     personNum: "1    人",
-      //     unitPrice: 12.34,
-      //     startDate: "2020-04-01",
-      //     endDate: "2020-04-02"
-      //   },
-      //   {
-      //     rowNum: 1,
-      //     ticketTypeName: "火车票",
-      //     ticketCode: "TN23423041232",
-      //     personNum: "1    人",
-      //     unitPrice: 12.34,
-      //     startDate: "2020-04-01",
-      //     endDate: "2020-04-02"
-      //   },
-      //   {
-      //     rowNum: 1,
-      //     ticketTypeName: "火车票",
-      //     ticketCode: "TN23423041233",
-      //     personNum: "1    人",
-      //     unitPrice: 12.34,
-      //     startDate: "2020-04-01",
-      //     endDate: "2020-04-02"
-      //   },
-      //   {
-      //     rowNum: 1,
-      //     ticketTypeName: "火车票",
-      //     ticketCode: "TN23423041234",
-      //     personNum: "4    人",
-      //     unitPrice: 12.34,
-      //     startDate: "2020-04-01",
-      //     endDate: "2020-04-02"
-      //   },
-      //   {
-      //     rowNum: 1,
-      //     ticketTypeName: "火车票",
-      //     ticketCode: "TN23423041235",
-      //     personNum: "3    人",
-      //     unitPrice: 12.34,
-      //     startDate: "2020-04-01",
-      //     endDate: "2020-04-02"
-      //   },
-      //   {
-      //     rowNum: 1,
-      //     ticketTypeName: "火车票",
-      //     ticketCode: "TN23423041236",
-      //     personNum: "2    人",
-      //     unitPrice: 12.34,
-      //     startDate: "2020-04-01",
-      //     endDate: "2020-04-02"
-      //   }
-      // ],
       selections: [],
       showPrintDialog: false,
       currentPrintNum: 0,
@@ -133,10 +77,13 @@ export default {
       salePointName: "自助售票机1号"
     };
   },
-  created() {},
+  created() {
+  },
   methods: {
     onBack() {
-      this.$router.go(-1);
+      this.$router.go({
+        name: 'index'
+      });
     },
     ticketSelectChange(val) {
       this.selections = val;
@@ -185,7 +132,7 @@ export default {
         companyName: this.companyName,
         cTime: dateNow.toLocaleString(),
         distributorName: this.distributorName,
-        reaMoney: ticketData.unitPrice,
+        reaMoney: ticketData.reaMoney,
         salePointName: this.salePointName,
         changCi: "上午第一场",
         seat: "A区3排4号"

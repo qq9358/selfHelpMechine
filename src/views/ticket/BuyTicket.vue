@@ -28,7 +28,7 @@
               <div class="div-tcol-num">
                 <el-input-number
                   v-model="trow.quantity"
-                  @change="quantityChange(trow.ticketTypeId)"
+                  @change="quantityChange(trow)"
                   :min="0"
                   :max="trow.maxBuyNum"
                   size="large"
@@ -254,13 +254,20 @@ export default {
     onBack() {
       this.$router.go(-1);
     },
-    quantityChange(changeTicketTypeId) {
+    quantityChange(event) {
       let ticketData = null;
       this.totalNum = 0;
       this.totalAmount = 0;
       for (let i = 0; i < this.ticketDatas.length; i++) {
         ticketData = this.ticketDatas[i];
-        if (ticketData.ticketTypeId === changeTicketTypeId) {
+        if (ticketData.ticketTypeId === event.ticketTypeId) {
+          if (event.quantity < ticketData.minBuyNum) {
+            if (event.quantity == ticketData.minBuyNum - 1) {
+              event.quantity = 0;
+            } else {
+              event.quantity = ticketData.minBuyNum;
+            }
+          }
           ticketData.amount = ticketData.quantity * ticketData.unitPrice;
         }
         this.totalNum += ticketData.quantity;
@@ -287,15 +294,15 @@ export default {
         await this.createOrder();
         await this.startPay();
         clearInterval(this.readCertTimer);
-      }
-      if (this.currentReadNum < this.ticketDatas.length) {
-        let ticketData = this.ticketDatas[this.currentReadNum++];
-        console.log(ticketData);
-        if (ticketData.quantity > 0 && ticketData.needCertFlag) {
-          this.currentReadTicketData = ticketData;
-          this.showReadCert = true;
-        } else {
-          await this.startReadCert();
+      } else {
+        if (this.currentReadNum < this.ticketDatas.length) {
+          let ticketData = this.ticketDatas[this.currentReadNum++];
+          if (ticketData.quantity > 0 && ticketData.needCertFlag) {
+            this.currentReadTicketData = ticketData;
+            this.showReadCert = true;
+          } else {
+            await this.startReadCert();
+          }
         }
       }
     },
@@ -338,7 +345,7 @@ export default {
         readTicketHelper.playVideo("请使用支付宝扫码付款");
       }
 
-      this.expireSeconds = 555;
+      this.expireSeconds = 300;
       this.showPayDialog = true;
       this.payTitle = `支付 ${this.totalAmount.toFixed(2)} 元`;
       this.payTimer = setInterval(async () => {

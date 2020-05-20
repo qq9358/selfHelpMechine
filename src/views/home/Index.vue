@@ -24,7 +24,6 @@
 <script>
 import qWebChannel from "@/utils/qWebChannel.js";
 import staffService from "@/services/staffService.js";
-import ajax from "@/utils/ajax.js";
 
 export default {
   name: "HelloWorld",
@@ -46,11 +45,10 @@ export default {
       });
     }
 
-    let result = await staffService.loginAsync({
-      userName: 'admin',
-      password: 'admin'
+    await staffService.loginAsync({
+      userName: "admin",
+      password: "admin"
     });
-    console.log(result);
   },
   methods: {
     onQueryTicket() {
@@ -72,33 +70,6 @@ export default {
       this.$router.push({
         name: "login"
       });
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      );
-    },
-    beforeRemove(file) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
-    async myRequest(content) {
-      try {
-        let formData = new FormData();
-        formData.append("files", content.file);
-        console.log(formData.get("files"));
-        let result = await ajax.post("common/UploadVideoAsync");
-        console.log(result);
-      } catch (error) {
-        console.log(error);
-      }
     }
   }
 };

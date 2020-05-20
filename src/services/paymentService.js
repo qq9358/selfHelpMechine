@@ -9,8 +9,7 @@ export default {
     let response = await ajax.post(`/payment/JsApiPayAsync?listNo=${listNo}`);
     return response.result;
   },
-  async nativePayAsync(input){
-    console.log(input);
+  async nativePayAsync(input) {
     let response = await ajax.post(`/payment/NativePayAsync`, input);
     return response.result;
   }

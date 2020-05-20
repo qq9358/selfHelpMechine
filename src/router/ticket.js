@@ -26,8 +26,9 @@ const routes = [
       title: "票类选择"
     }
   }, {
-    path: "/selectTicket",
+    path: "/selectTicket/:ticketDatas",
     name: "selectTicket",
+    props: true,
     component: SelectTicket,
     meat: {
       title: "选择取票"

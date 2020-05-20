@@ -104,7 +104,7 @@ export default {
       qrGetSrc: iQrGetImg,
       listNo: {
         vmodel: "",
-        label: "取票号"
+        label: "订单号"
       },
       mobile: {
         vmodel: "",
@@ -145,8 +145,6 @@ export default {
         case 1:
           this.readQrCode();
           break;
-        default:
-          console.log("default");
       }
     },
     onFocus(event) {
@@ -195,7 +193,7 @@ export default {
         readTicketHelper.readQrCode(self.ticket);
       }, 250);
     },
-    onEnter() {
+    async onEnter() {
       let result = validator.validate([
         {
           value: this.listNo.vmodel,
@@ -226,15 +224,14 @@ export default {
       const input = {
         listNo: this.listNo.vmodel,
         mobile: this.mobile.vmodel
-      }
-      this.queryResult = orderService.getOrderInfoForQuery(input);
-      console.log(this.queryResult);
+      };
+      this.queryResult = await orderService.getSelfHelpOrderTicketAsync(input);
       this.selectTicket();
     },
     selectTicket() {
       this.$router.replace({
         name: "selectTicket",
-        ticketDatas: this.queryResult
+        params: { ticketDatas: this.queryResult.selfHelpGetTickets }
       });
     },
     clear() {
